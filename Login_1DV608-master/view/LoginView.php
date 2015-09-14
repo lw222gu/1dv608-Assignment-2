@@ -1,5 +1,6 @@
 <?php
 
+
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -10,7 +11,28 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 
-	
+	private $loginModel;
+
+    public function __construct(\model\Login $login){
+        $this->loginModel = $login;
+    }
+
+    public function didUserPressLoginButton(){
+        if(isset($_POST[self::$login])){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function userNameInput(){
+        return $_POST[self::$name];
+    }
+
+    public function passwordInput(){
+        return $_POST[self::$password];
+    }
+
 
 	/**
 	 * Create HTTP response
@@ -20,10 +42,14 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function response() {
-		$message = '';
-		
+		//$message = '';
+        $message = $this->loginModel->getMessage();
+
 		$response = $this->generateLoginFormHTML($message);
-		//$response .= $this->generateLogoutButtonHTML($message);
+
+        if($this->loginModel->checkIfLoggedIn()){
+            $response = $this->generateLogoutButtonHTML($message);
+        }
 		return $response;
 	}
 
