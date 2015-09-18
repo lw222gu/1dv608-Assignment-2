@@ -5,7 +5,8 @@
     class Login {
         private static $username = "Admin";
         private static $password = "Password";
-        public $loggedIn = false;
+        private $loggedIn = false;
+        public $savedUserName = "";
 
         public function __construct() {
 
@@ -17,6 +18,7 @@
             }
 
             if(empty($password)){
+                $this->savedUserName = $username;
                 throw new \Exception("Password is missing");
             }
 
@@ -31,4 +33,8 @@
         public function checkIfLoggedIn(){
             return $this->loggedIn;
         }
+
+    //    public function getSavedUsername(){
+    //        return $this->savedUserName;
+    //    }
     }
