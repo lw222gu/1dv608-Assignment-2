@@ -35,7 +35,6 @@ class LoginView {
 
     public function didUserPressLogoutButton(){
         if(isset($_POST[self::$logout])) {
-            //$this->message = "Bye bye!";
             return true;
         }
         return false;
@@ -54,8 +53,6 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function response() {
-		//$message = '';
-        //$message = $this->loginModel->getMessage();
 
 		$response = $this->generateLoginFormHTML($this->message);
 
