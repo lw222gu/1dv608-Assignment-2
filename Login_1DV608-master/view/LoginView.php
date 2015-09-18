@@ -12,6 +12,7 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 
 	private $loginModel;
+    public $message = "";
 
     public function __construct(\model\Login $login){
         $this->loginModel = $login;
@@ -21,7 +22,6 @@ class LoginView {
         if(isset($_POST[self::$login])){
             return true;
         }
-
         return false;
     }
 
@@ -31,6 +31,18 @@ class LoginView {
 
     public function passwordInput(){
         return $_POST[self::$password];
+    }
+
+    public function didUserPressLogoutButton(){
+        if(isset($_POST[self::$logout])) {
+            //$this->message = "Bye bye!";
+            return true;
+        }
+        return false;
+    }
+
+    public function getMessage($e){
+        $this->message = $e->getMessage();
     }
 
 
@@ -43,12 +55,17 @@ class LoginView {
 	 */
 	public function response() {
 		//$message = '';
-        $message = $this->loginModel->getMessage();
+        //$message = $this->loginModel->getMessage();
 
-		$response = $this->generateLoginFormHTML($message);
+		$response = $this->generateLoginFormHTML($this->message);
 
         if($this->loginModel->checkIfLoggedIn()){
-            $response = $this->generateLogoutButtonHTML($message);
+            $response = $this->generateLogoutButtonHTML("Welcome");
+        }
+
+        if($this->didUserPressLogoutButton())
+        {
+            $response = $this->generateLoginFormHTML("Bye bye!");
         }
 		return $response;
 	}
