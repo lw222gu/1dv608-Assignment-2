@@ -2,14 +2,20 @@
 
     namespace model;
 
+    session_start();
+
     class Login {
         private static $username = "Admin";
         private static $password = "Password";
-        private $loggedIn = false;
         public $savedUserName = "";
+        public $isLoggedInSession = "isLoggedIn";
+
+
 
         public function __construct() {
-
+            if(!isset($_SESSION[$this->isLoggedInSession])){
+                $_SESSION[$this->isLoggedInSession] = false;
+            }
         }
 
         public function checkUserInput($username, $password){
@@ -23,18 +29,24 @@
             }
 
             if($username !== self::$username || $password !== self::$password){
+                $this->savedUserName = $username;
                 throw new \Exception("Wrong name or password");
             }
 
-            $this->loggedIn = true;
+            $_SESSION[$this->isLoggedInSession] = true;
             return true;
         }
 
         public function checkIfLoggedIn(){
-            return $this->loggedIn;
+            if($_SESSION[$this->isLoggedInSession]){
+                return true;
+            }
+            return false;
         }
 
-    //    public function getSavedUsername(){
-    //        return $this->savedUserName;
-    //    }
+        public function Logout(){
+            $_SESSION[$this->isLoggedInSession] = false;
+            session_destroy();
+        }
+
     }

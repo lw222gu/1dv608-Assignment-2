@@ -27,10 +27,12 @@ class LoginView {
 
     public function userNameInput(){
         return $_POST[self::$name];
+        //Kolla redan här att den inte är tom?
     }
 
     public function passwordInput(){
         return $_POST[self::$password];
+        //Kolla redan här att den inte är tom?
     }
 
     public function didUserPressLogoutButton(){
@@ -44,6 +46,14 @@ class LoginView {
         $this->message = $e->getMessage();
     }
 
+    public function setLoginMessage(){
+        $this->message = "Welcome";
+    }
+
+    public function setLogoutMessage(){
+        $this->message = "Bye bye!";
+    }
+
 
 	/**
 	 * Create HTTP response
@@ -54,17 +64,15 @@ class LoginView {
 	 */
 	public function response() {
 
-		$response = $this->generateLoginFormHTML($this->message, $this->loginModel->savedUserName);
-
         if($this->loginModel->checkIfLoggedIn()){
-            $response = $this->generateLogoutButtonHTML("Welcome");
+            $response = $this->generateLogoutButtonHTML($this->message);
         }
 
-        if($this->didUserPressLogoutButton())
-        {
-            $response = $this->generateLoginFormHTML("Bye bye!");
+        else {
+            $response = $this->generateLoginFormHTML($this->message, $this->loginModel->savedUserName);
         }
-		return $response;
+
+        return $response;
 	}
 
 	/**
