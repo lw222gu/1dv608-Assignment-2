@@ -12,12 +12,16 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 
 	private $loginModel;
-    public $message = "";
+    private $message = "";
+    private $savedUsername = "";
 
     public function __construct(\model\Login $login){
         $this->loginModel = $login;
     }
 
+    /**
+     * Functions below gets input from user.
+     */
     public function didUserPressLoginButton(){
         if(isset($_POST[self::$login])){
             return true;
@@ -25,14 +29,25 @@ class LoginView {
         return false;
     }
 
-    public function userNameInput(){
-        return $_POST[self::$name];
-        //Kolla redan här att den inte är tom?
+    public function usernameInput(){
+        if(!empty($_POST[self::$name])){
+            $this->savedUsername = $_POST[self::$name];
+            return $_POST[self::$name];
+        }
+
+        else {
+            throw new Exception("Username is missing");
+        }
     }
 
     public function passwordInput(){
-        return $_POST[self::$password];
-        //Kolla redan här att den inte är tom?
+        if(!empty($_POST[self::$password])){
+            return $_POST[self::$password];
+        }
+
+        else {
+            throw new Exception("Password is missing");
+        }
     }
 
     public function didUserPressLogoutButton(){
@@ -42,7 +57,11 @@ class LoginView {
         return false;
     }
 
-    public function getMessage($e){
+
+    /**
+     * Functions below sets messages.
+     */
+    public function setErrorMessage($e){
         $this->message = $e->getMessage();
     }
 
@@ -63,13 +82,12 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function response() {
-
         if($this->loginModel->checkIfLoggedIn()){
             $response = $this->generateLogoutButtonHTML($this->message);
         }
 
         else {
-            $response = $this->generateLoginFormHTML($this->message, $this->loginModel->savedUserName);
+            $response = $this->generateLoginFormHTML($this->message);
         }
 
         return $response;
@@ -94,15 +112,15 @@ class LoginView {
 	* @param $message, String output message
 	* @return  void, BUT writes to standard output!
 	*/
-	private function generateLoginFormHTML($message, $savedUsername) {
+	private function generateLoginFormHTML($message) {
 		return '
-			<form method="post" > 
+			<form method="post" >
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $savedUsername . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->savedUsername . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />

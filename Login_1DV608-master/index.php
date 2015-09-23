@@ -11,7 +11,6 @@ require_once('controller/LoginController.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-
 //CREATE MODEL OBJECTS
 $login = new model\Login();
 
@@ -20,7 +19,7 @@ $v = new LoginView($login);
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
-//CREATE CONTROLLER OBJECTS
+//START CONTROLLER
 $loginController = new LoginController($login, $v);
 
 $lv->render($login->checkIfLoggedIn(), $v, $dtv);
