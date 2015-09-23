@@ -46,5 +46,4 @@ class Login {
         $_SESSION[$this->isLoggedInSession] = false;
         session_destroy();
     }
-
 }
